@@ -70,3 +70,4 @@ en:
   mc_day2: "Day"
   mc_add_or_edit_holiday: "Click on a day to add or edit holiday"
   mc_default_value: Default value
+  mc_settings_default_calendar_name: "Default calendar name"
