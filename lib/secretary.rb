@@ -68,7 +68,7 @@ class Secretary
 
     all_days = interval_days.merge holidays
 
-    return all_days.keep_if{ |k,v| v[:name] == options[:day_type] } if options[:day_type]
+    return all_days.reject{ |k,v| v[:name] != options[:day_type] } if options[:day_type]
 
     all_days
   end
