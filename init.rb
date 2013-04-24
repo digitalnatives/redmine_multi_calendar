@@ -23,14 +23,14 @@ require_dependency 'multi_calendar_hooks'
 
 Dispatcher.to_prepare :redmine_multi_calendar do
   require_dependency 'principal'
-  
+
   require_dependency 'calendars_controller'
   require_dependency 'my_controller'
   require_dependency 'users_helper'
   require_dependency 'application_helper'
 
   require_dependency 'multi_calendar_application_helper'
-  
+
   User.class_eval do
     has_one :assign_calendar,  :dependent => :destroy
   end
@@ -64,10 +64,11 @@ Redmine::Plugin.register :redmine_multi_calendar do
   description 'This is a plugin for Redmine'
   version '0.0.1'
 
-     menu :top_menu, 'calendar', { :controller => 'calendar', :action => 'index' },
-        {
-            :caption => 'Calendars',
-            :if => Proc.new { User.current.admin }
-        }
+    menu :top_menu, 'calendar', { :controller => 'calendar', :action => 'index' },
+      {
+        :caption => 'Calendars',
+        :if => Proc.new { User.current.admin }
+      }
+  settings :default => {'default_calendar_name' => 'Global'}, :partial => 'settings/settings'
 
 end

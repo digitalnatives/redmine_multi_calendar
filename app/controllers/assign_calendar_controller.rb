@@ -39,7 +39,7 @@ class AssignCalendarController < ApplicationController
               puts attrs.merge(:user_id => user_id)
 
             end
-        
+
          end
      end
 
@@ -56,7 +56,7 @@ class AssignCalendarController < ApplicationController
 
  def autocomplete_for_assign_calendar
 
-    @calendar = Calendar.find(params[:id])   
+    @calendar = Calendar.find(params[:id])
     @users = Principal.active.like(params[:q]).find(:all, :limit => 100) - AssignCalendar.all_users - Group.all
 
     render :layout => false
@@ -95,12 +95,12 @@ class AssignCalendarController < ApplicationController
 
         # format.html { redirect_to :back }
          format.html { redirect_to :controller => 'users', :action => 'edit', :id => params[:id], :tab => 'assign_calendar' }
-         format.js { 
+         format.js {
            render(:update) {|page|
              page.replace_html "tab-content-assign_calendar", :partial => 'assign_calendar/new_assign_calendar'
              page.replace_html "add_m_c", :partial => 'issues_calendar/add_m_calendar'
              }
-                     
+
            }
        else
          format.js {
@@ -115,9 +115,8 @@ class AssignCalendarController < ApplicationController
   def destroy_calendar
 
     assign_calendar = AssignCalendar.find_by_user_id(params[:id])
- 
+
     if request.post? && assign_calendar
-    
       assign_calendar.destroy
     end
     @user = User.find(params[:id])
