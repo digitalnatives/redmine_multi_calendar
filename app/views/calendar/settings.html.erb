@@ -1,5 +1,5 @@
-<%= render :partial => 'menu/menu_show_calendar', :locals => { :calendar => @calendar} %>
+<%= render 'menu/menu_show_calendar', :calendar => @calendar %>
 
-<h2><%=l(:label_settings)%></h2>
+<h2><%= l(:label_settings) %></h2>
 
 <%= render_tabs calendart_settings_tabs %>

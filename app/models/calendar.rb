@@ -34,42 +34,39 @@ class Calendar < ActiveRecord::Base
     copy_week_days = calendar.week_days
     copy_calendar_vacations = calendar.calendar_vacations
     copy_pattern_weeklies = calendar.pattern_weeklies
-      copy_pattern_weeklies.each do |pattern_weekly|
-        new_pattern_weekly = PatternWeekly.new(pattern_weekly.attributes)
-        new_pattern_weekly.calendar_id = id
+    copy_pattern_weeklies.each do |pattern_weekly|
+      new_pattern_weekly = PatternWeekly.new(pattern_weekly.attributes)
+      new_pattern_weekly.calendar_id = id
 
-        if new_pattern_weekly.save
-          copy_week_days.each do |wd|
-            if wd.pattern_weekly_id == pattern_weekly.id
-              wd.pattern_weekly_id = new_pattern_weekly.id
-              new_week_day = WeekDay.new(wd.attributes)
-              new_week_day.calendar_id = id
-              new_week_day.save
-            end
+      if new_pattern_weekly.save
+        copy_week_days.each do |wd|
+          if wd.pattern_weekly_id == pattern_weekly.id
+            wd.pattern_weekly_id = new_pattern_weekly.id
+            new_week_day = WeekDay.new(wd.attributes)
+            new_week_day.calendar_id = id
+            new_week_day.save
           end
+        end
 
-          copy_calendar_vacations.each do |calendar_vacation|
-            if calendar_vacation.pattern_weekly_id == pattern_weekly.id
-              calendar_vacation.pattern_weekly_id = new_pattern_weekly.id
-              new_calendar_vacation = CalendarVacation.new(calendar_vacation.attributes)
-              new_calendar_vacation.calendar_id = id
-              new_calendar_vacation.save
-            end
+        copy_calendar_vacations.each do |calendar_vacation|
+          if calendar_vacation.pattern_weekly_id == pattern_weekly.id
+            calendar_vacation.pattern_weekly_id = new_pattern_weekly.id
+            new_calendar_vacation = CalendarVacation.new(calendar_vacation.attributes)
+            new_calendar_vacation.calendar_id = id
+            new_calendar_vacation.save
           end
         end
       end
-
+    end
   end
 
-
-
   def self.all_vacation_days(user, start, finish)
-     holidays = {}     
+    holidays = {}
     if user.assign_calendar
-      calendar = user.assign_calendar.calendar    
+      calendar = user.assign_calendar.calendar
       CalendarVacation.events_for_free_dates(calendar.id, start, finish).each do |event|
-          holidays[event.date_holiday] = event        
-      end      
+        holidays[event.date_holiday] = event
+      end
       holidays.merge!(CalendarVacation.fixed_date_for(calendar, start, finish))
       w_days = WeekDay.all_week_days_for_empty_duration(calendar)
     else
@@ -77,49 +74,45 @@ class Calendar < ActiveRecord::Base
     end
     date = start.to_date
     days = holidays.size
-    days_v = 0  
+    days_v = 0
     while date < finish.to_date + 1.day
-        days = days + 1 if !holidays[date] && w_days.include?(date.wday)     
-        date = date + 1.day
-        days_v = days_v + 1     
-     end     
-     days_v = days_v - days
-     days_v
+      days = days + 1 if !holidays[date] && w_days.include?(date.wday)
+      date = date + 1.day
+      days_v = days_v + 1
+    end
+    days_v = days_v - days
+    days_v
   end
-
 
   private
 
   def default_pattern_weekly
     if !duplicate
-    working_day = PatternWeekly.create(:name => "Working day",
-                         :color => "#BBCCFF",
-                         :calendar_id => id,
-                         :duration => 8,
-                         :deft => true)
-    short_day = PatternWeekly.create(:name => "Short day",
-                         :color => "#dcbccf",
-                         :calendar_id => id,
-                         :duration => 7,
-                         :deft => true)
-    PatternWeekly.create(:name => "Holiday",
-                         :color => "#fdc68c",
-                         :calendar_id => id,
-                         :duration => 0,
-                         :deft => true)
-    weekend = PatternWeekly.create(:name => "Weekend",
-                         :color => "#FFFFDD",
-                         :calendar_id => id,
-                         :duration => 0,
-                         :deft => true)
-
+    working_day = PatternWeekly.create  :name => "Working day",
+                                        :color => "#BBCCFF",
+                                        :calendar_id => id,
+                                        :duration => 8,
+                                        :deft => true
+    short_day   = PatternWeekly.create  :name => "Short day",
+                                        :color => "#dcbccf",
+                                        :calendar_id => id,
+                                        :duration => 7,
+                                        :deft => true
+    holiday     = PatternWeekly.create  :name => "Holiday",
+                                        :color => "#fdc68c",
+                                        :calendar_id => id,
+                                        :duration => 0,
+                                        :deft => true
+    weekend     = PatternWeekly.create  :name => "Weekend",
+                                        :color => "#FFFFDD",
+                                        :calendar_id => id,
+                                        :duration => 0,
+                                        :deft => true
     for i in 1..5
       WeekDay.create(:dayname => i, :calendar_id => id, :pattern_weekly_id => working_day.id)
     end
     WeekDay.create(:dayname => 0, :calendar_id => id, :pattern_weekly_id => weekend.id)
     WeekDay.create(:dayname => 6, :calendar_id => id, :pattern_weekly_id => weekend.id)
     end
-
   end
-
 end

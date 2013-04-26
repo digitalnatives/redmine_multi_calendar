@@ -25,18 +25,17 @@ class AssignCalendar < ActiveRecord::Base
   validates_presence_of :calendar_id, :user_id
   validates_numericality_of :calendar_id, :allow_nil => true, :message => :invalid
 
-  named_scope :user_have_calendar, lambda { |calendar_id| {:conditions => ["calendar_id = ?", calendar_id]} }
+  scope :user_have_calendar, lambda { |calendar_id| where(:calendar_id => calendar_id) }
 
- def self.all_users
-  self.assign_calendars_to_users(self.all)
+  def self.all_users
+    self.assign_calendars_to_users(self.all)
+  end
 
- end
+  def self.all_users_for_calendar(id)
+    self.assign_calendars_to_users(self.user_have_calendar(id))
+  end
 
- def self.all_users_for_calendar(id)
-  self.assign_calendars_to_users(self.user_have_calendar(id))
- end
-
-private
+  private
 
   def self.assign_calendars_to_users(assing_c)
     users = []
@@ -44,6 +43,6 @@ private
       users << User.find(a_c.user_id)
     end
     users
- end
+  end
 
 end

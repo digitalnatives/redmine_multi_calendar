@@ -17,11 +17,9 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 require 'redmine'
-
-require 'dispatcher'
 require_dependency 'multi_calendar_hooks'
 
-Dispatcher.to_prepare :redmine_multi_calendar do
+Rails.configuration.to_prepare do
   require_dependency 'principal'
 
   require_dependency 'calendars_controller'
@@ -35,15 +33,12 @@ Dispatcher.to_prepare :redmine_multi_calendar do
     has_one :assign_calendar,  :dependent => :destroy
   end
 
-
-
-
   unless CalendarsController.included_modules.include? CalendarsControllerPatch
     CalendarsController.send(:include, CalendarsControllerPatch)
   end
 
   unless ApplicationHelper.included_modules.include? MultiCalendarApplicationHelper
-     ApplicationHelper.send(:include, MultiCalendarApplicationHelper)
+    ApplicationHelper.send(:include, MultiCalendarApplicationHelper)
   end
 
   unless MyController.included_modules.include? MyControllerPatch
@@ -53,8 +48,6 @@ Dispatcher.to_prepare :redmine_multi_calendar do
   unless UsersController.included_modules.include? UsersControllerPatch
     UsersController.send(:include, UsersControllerPatch)
   end
-
-
 end
 
 

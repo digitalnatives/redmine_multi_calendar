@@ -20,21 +20,21 @@ class PatternWeekliesController < ApplicationController
   unloadable
 
   before_filter :check_user
- 
+
 
   def index
   end
 
   def create
-    day_type = PatternWeekly.new( params[:day_type])
+    day_type = PatternWeekly.new( params[:pattern_weekly])
     day_type.save
-    redirect_to :controller => "calendar", :action => "settings", :id => params[:day_type][:calendar_id], :tab => 'day_type'
+    redirect_to :controller => "calendar", :action => "settings", :id => params[:pattern_weekly][:calendar_id], :tab => 'day_type'
   end
 
   def edit
     day_type = PatternWeekly.find(params[:id])
-    day_type.update_attributes(params[:day_type])
-    redirect_to :controller => "calendar", :action => "settings", :id => params[:day_type][:calendar_id], :tab => 'day_type'
+    day_type.update_attributes(params[:pattern_weekly])
+    redirect_to :controller => "calendar", :action => "settings", :id => params[:pattern_weekly][:calendar_id], :tab => 'day_type'
   end
 
 
