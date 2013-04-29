@@ -31,7 +31,7 @@ module MultiCalendarApplicationHelper
       else
         tag = select_tag "#{id}", opt
       end
-      tag
+      tag.html_safe
   end
 
 
@@ -47,10 +47,10 @@ module MultiCalendarApplicationHelper
 
 
 
-  def vacations_for_users(only_one_calendar)   
+  def vacations_for_users(only_one_calendar)
     vacations = []
     if only_one_calendar && only_one_calendar != "false"
-      vacations = CalendarVacation.find_all_by_calendar_id(only_one_calendar)   
+      vacations = CalendarVacation.find_all_by_calendar_id(only_one_calendar)
     else
        vacations = CalendarVacation.all
     end
@@ -66,7 +66,7 @@ module MultiCalendarApplicationHelper
         end
         vacations = vacations.find_all{ |elem| calendars.include?(elem.calendar_id) }
     end
-   
+
    e = []
      vacations.each do |event|
         e << event.date_holiday
@@ -96,14 +96,14 @@ module MultiCalendarApplicationHelper
            e << "</div>"
        end
      end
-     return  e
+     return  e.html_safe
   end
 
 
   def vacations_events_on(day, vacations, project)
     return my_page_vacations(day, vacations) if !project
    e = ""
-   vacations_day = vacations.find_all{ |elem| elem.date_holiday == day } 
+   vacations_day = vacations.find_all{ |elem| elem.date_holiday == day }
    vacations_day_f = vacations.find_all{ |elem| elem.fixed_date == 1 && elem.date_holiday.year < day.year && Date.new(day.year, elem.date_holiday.month, elem.date_holiday.day ) == day }
 
      vacations_day = vacations_day + vacations_day_f
@@ -132,8 +132,8 @@ module MultiCalendarApplicationHelper
                  end
                  e << "<p>#{link_to_user a.user}</p>"
                  e << "</div>"
-             end             
-           end           
+             end
+           end
            if v.calendar.assign_calendars.empty?
              e << "#{l(:mc_is_empty)}"
            end
@@ -142,7 +142,7 @@ module MultiCalendarApplicationHelper
            e << "</div>"
        end
      end
-   return  e
+   return  e.html_safe
   end
 
   def select_m_calendar(one_calendar, only_my_calendar='Only my calendar' )
@@ -152,40 +152,27 @@ module MultiCalendarApplicationHelper
   end
 
 
-  
+
   def options_for_calendar_select(calendars)
     options = content_tag('option', "--- #{l(:actionview_instancetag_blank_option)} ---")
     calendars.each do |i|
       tag_options = {:value => i.id}
       options << content_tag('option', i.name, tag_options)
     end
-    options
+    options.html_safe
   end
-
-=begin
-  def find_color_w_d(calendar)
-    e = {}
-    if calendar
-      wd = WeekDay.find_all_by_calendar_id(calendar)
-      wd.each do |event|
-        e[event.dayname] = event.pattern_weekly if event.pattern_weekly && event.pattern_weekly.id == 4
-      end
-    end
-   return  e
-  end
-=end
 
  def find_color_w_d(calendar, project)
    pattern_weekly_name = "weekend"
     e = {}
     if calendar.to_s != "false"
-      
+
       wd = WeekDay.find_all_by_calendar_id(calendar)
       wd.each do |event|
         e[event.dayname] = event.pattern_weekly.color if event.pattern_weekly && event.pattern_weekly.name.strip.downcase == pattern_weekly_name && event.pattern_weekly.deft
       end
     else
-      
+
       if User.current && User.current.assign_calendar && User.current.assign_calendar.calendar_id
         wd = WeekDay.find_all_by_calendar_id(User.current.assign_calendar.calendar_id)
         wd.each do |event|
@@ -195,15 +182,11 @@ module MultiCalendarApplicationHelper
         project.users.each do |user|
           wd = WeekDay.find_all_by_calendar_id(user.assign_calendar.calendar.id) if user.assign_calendar && User.current.id != user.id
           wd.each do |event|
-           # e[event.dayname] = event.pattern_weekly.color if event.pattern_weekly && event.pattern_weekly.id == 4 && !e.include?(event.dayname)  && event.pattern_weekly.deft
-          #  e[event.dayname] = "#FFE4E1" if event.pattern_weekly && event.pattern_weekly.id == 4 && !e.include?(event.dayname)  && event.pattern_weekly.deft
             e[event.dayname] = "#FFE4E1" if event.pattern_weekly && event.pattern_weekly.name.strip.downcase == pattern_weekly_name && !e.include?(event.dayname)  && event.pattern_weekly.deft
           end
         end
       end
     end
-   return  e
+   return  e.html_safe
   end
-
 end
-
