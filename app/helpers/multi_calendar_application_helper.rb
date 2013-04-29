@@ -31,8 +31,8 @@ module MultiCalendarApplicationHelper
       else
         tag = select_tag "#{id}", opt
       end
-      tag.html_safe
-  end
+      tag
+    end
 
 
   def holiday_options_for_select(one_calendar, project)
