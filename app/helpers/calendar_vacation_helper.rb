@@ -77,25 +77,25 @@ module CalendarVacationHelper
     fixed_date, events_fixed_date = find_fixed_date(options[:calendar], options[:year])
     beginning_of_week(first, first_weekday).upto(first - 1) do |d|
       cal << %(<td class="#{options[:other_month_class]})
-   
+
       if options[:accessible]
         cal << %(">#{d.day}<span class="hidden"> #{Date::MONTHNAMES[d.month]}</span></td>)
       else
         cal << %(">#{d.day}</td>)
       end
     end unless first.wday == first_weekday
-    
+
     date_e, events = find_events(options[:calendar], first, last)
     wd = find_color_week_days(options[:calendar])
 
     first.upto(last) do |cur|
 
       if date_e.include?(cur)
-       
+
         if options[:calendar]
           calendar_id = options[:calendar].id
           event = events.event_for_date(calendar_id, cur)
-          
+
           select_day_types = event.first.pattern_weekly_id
           cell_text = "<a href='#' title='#{event.first.holiday}' onclick='return e_edit(\"#{event.first.holiday}\",\"#{cur}\",\"#{event.first.fixed_date}\",\"#{select_day_types}\");'> #{cur.mday}</a>"
         end
@@ -108,7 +108,7 @@ module CalendarVacationHelper
         if options[:calendar]
           calendar_id = options[:calendar].id
           event = events_fixed_date.find_all{ |elem| elem.date_holiday.to_formatted_s(:short)==cur.to_formatted_s(:short) } #event_for_date(calendar_id, cur)
-          
+
           select_day_types = event.first.pattern_weekly_id
           cell_text = "<a href='#' title='#{event.first.holiday}' onclick='return e_edit(\"#{event.first.holiday}\",\"#{event.first.date_holiday}\",\"#{event.first.fixed_date}\",\"#{select_day_types}\");'> #{cur.mday}</a>"
         end
@@ -117,11 +117,11 @@ module CalendarVacationHelper
       end
 
 
-    
+
 
     #id_holiday = PatternWeekly.type(options[:calendar],"Holiday").first
     #id_holiday = id_holiday.id if id_holiday
-      
+
       #select_day_types = id_holiday
       select_day_types = PatternWeekly.get_id_type_show_default(options[:calendar])
       cell_text  ||= "<a href='#' title='Add new holiday' onclick='return e_add(\"#{cur}\", \"#{select_day_types}\");'> #{cur.mday}</a>" # cur.mday "<a href='#' onclick='return click_me();'>" + cur.mday.to_s + "</a>"
@@ -129,7 +129,7 @@ module CalendarVacationHelper
 
       cell_attrs[:class] += " weekendDay" if [0, 6].include?(cur.wday) && !cell_attrs[:class].index("specialDay")
       cell_attrs[:class] += " today" if (cur == Date.today) and options[:show_today]
-     
+
       cell_attrs = cell_attrs.map {|k, v| %(#{k}="#{v}") }.join(" ")
 
       cal << "<td #{cell_attrs}>#{cell_text}</td>"
@@ -137,7 +137,7 @@ module CalendarVacationHelper
     end
     (last + 1).upto(beginning_of_week(last + 7, first_weekday) - 1)  do |d|
       cal << %(<td class="#{options[:other_month_class]})
-    
+
       if options[:accessible]
         cal << %(">#{d.day}<span class='hidden'> #{Date::MONTHNAMES[d.mon]}</span></td>)
       else
@@ -145,6 +145,7 @@ module CalendarVacationHelper
       end
     end unless last.wday == last_weekday
     cal << "</tr></tbody></table>"
+    cal.html_safe
   end
 
   private
@@ -186,7 +187,7 @@ module CalendarVacationHelper
     "<script type='text/javascript'>jQuery(document).ready(function($){$('a[rel*=facebox]').facebox()})</script>"
   end
 
-  
+
   def find_events(calendar, first, last)
     e = []
     if calendar
