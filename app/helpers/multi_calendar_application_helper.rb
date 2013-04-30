@@ -32,7 +32,7 @@ module MultiCalendarApplicationHelper
         tag = select_tag "#{id}", opt
       end
       tag
-    end
+  end
 
 
   def holiday_options_for_select(one_calendar, project)
