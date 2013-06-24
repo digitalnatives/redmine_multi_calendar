@@ -17,8 +17,8 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 ActionController::Routing::Routes.draw do |map|
-  map.connect 'secretary/day'     , :controller => 'secretary', :action => 'day'
-  map.connect 'secretary/interval', :controller => 'secretary', :action => 'interval'
+  map.connect 'secretary/day.:format'     , :controller => 'secretary', :action => 'day'
+  map.connect 'secretary/interval.:format', :controller => 'secretary', :action => 'interval'
 
   map.connect 'calendars/:id/settings', :controller => 'calendar', :action => 'settings'
   map.connect 'calendars/:id/settings/:tab', :controller => 'calendar', :action => 'settings'
