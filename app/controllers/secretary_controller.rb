@@ -1,6 +1,8 @@
 class SecretaryController < ApplicationController
   unloadable
 
+  skip_before_filter :check_if_login_required
+
   def day
     date = Date.parse(params['date']) rescue nil
 
