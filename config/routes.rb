@@ -17,6 +17,9 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 ActionController::Routing::Routes.draw do |map|
+  map.connect 'secretary/day.:format'     , :controller => 'secretary', :action => 'day'
+  map.connect 'secretary/interval.:format', :controller => 'secretary', :action => 'interval'
+
   map.connect 'calendars/:id/settings', :controller => 'calendar', :action => 'settings'
   map.connect 'calendars/:id/settings/:tab', :controller => 'calendar', :action => 'settings'
 
@@ -39,7 +42,7 @@ ActionController::Routing::Routes.draw do |map|
   map.connect 'calendar/assign/create', :controller => 'assign_calendar', :action => 'create'
   map.connect 'calendar/assign/autocomplete', :controller => 'assign_calendar', :action => 'autocomplete_for_assign_calendar'
   map.connect 'calendar/assign/destroy', :controller => 'assign_calendar', :action => 'destroy'
-  map.connect 'calendar/assign/add', :controller => 'assign_calendar', :action => 'add_calendar' 
+  map.connect 'calendar/assign/add', :controller => 'assign_calendar', :action => 'add_calendar'
   map.connect 'calendar/assign/destroy_cal', :controller => 'assign_calendar', :action => 'destroy_calendar'
   map.connect 'calendar/destroy', :controller => 'calendar', :action => 'destroy'
   map.connect 'calendar/update', :controller => 'calendar', :action => 'update'
@@ -52,10 +55,10 @@ ActionController::Routing::Routes.draw do |map|
   map.connect 'calendar/vacation/update', :controller => 'calendar_vacation', :action => 'update'
   map.connect 'calendar/vacation/destroy', :controller => 'calendar_vacation', :action => 'destroy'
   map.connect 'calendar/vacation/duplicate', :controller => 'calendar_vacation', :action => 'duplicate'
-  map.connect 'calendar/weekly', :controller => 'pattern_weeklies', :action => 'index' 
-  map.connect 'calendar/weekly/create', :controller => 'pattern_weeklies', :action => 'create' 
-  map.connect 'calendar/weekly/edit', :controller => 'pattern_weeklies', :action => 'edit' 
-  map.connect 'calendar/weekly/destroy', :controller => 'pattern_weeklies', :action => 'destroy' 
+  map.connect 'calendar/weekly', :controller => 'pattern_weeklies', :action => 'index'
+  map.connect 'calendar/weekly/create', :controller => 'pattern_weeklies', :action => 'create'
+  map.connect 'calendar/weekly/edit', :controller => 'pattern_weeklies', :action => 'edit'
+  map.connect 'calendar/weekly/destroy', :controller => 'pattern_weeklies', :action => 'destroy'
   map.connect 'calendar/week_days/edit', :controller => 'week_days', :action => 'edit'
   map.connect 'calendar/week_days/update', :controller => 'week_days', :action => 'update'
 end
